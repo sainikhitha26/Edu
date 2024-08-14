@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+{% block styles %}
+{% endblock styles %}
+
+{% block title %}Admin Home{% endblock title %}
+{% block login %}<a class="btn-getstarted" href="adminlogout">Logout</a>{% endblock login %}
+{% block main %}
+<table class="table table-striped">
+  <tbody>
+    <h1>Welcome, Professor {{ professor.First_name}} {{ professor.Last_name }}</h1>
+    <tr>
+      <td>Id :{{professor.prof_id}}</td>
+      <td>Name :{{professor.First_name}} {{professor.Last_name}}</td>
+      <td>Username :{{professor.Prof_username}}</td>
+      <td>Number :{{professor.Contact_number}}</td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Day</th>
+      <th>Course</th>
+      <th>section</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ entry.date }}</td>
+      <td>{{ entry.day }}</td>
+      <td>{{ entry.course_name }}</td>
+      <td>{{ entry.course_name }}</td>
+      <td>{{ entry.start_time }}</td>
+      <td>{{ entry.end_time }}</td>
+    </tr>
+  </tbody>
+
+</table>
+{% endblock main %}
+{% block script %}
+{% endblock script %}

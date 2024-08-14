@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block title %}Student{% endblock title %}
+{% block main %}
+
+{% endblock main %}
+{% block login %}
+{% if user.is_authenticated %}
+  <p class="pt-2">Welcome, {{ Student_login.get_username }}!</p>
+  {% else %}
+  <p>Welcome, new user. Please log in.</p>
+  {% endif %}
+  {% endblock login %}

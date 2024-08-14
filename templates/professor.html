@@ -1,0 +1,68 @@
+{% extends "index.html" %}
+{% block title %}Professor{% endblock title %}
+
+{% block main %}
+<div id="table1" class="table-content">
+    <form id="filterForm" method="GET" action="{% url 'your_view_name' %}">
+      <label for="profid">Professor ID:</label>
+      <input type="text" id="profid" name="profid" value="{{ request.GET.prof_id }}" placeholder="Professor ID"
+        oninput="autoSubmitForm()">
+
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" value="{{ request.GET.firstName }}"
+        placeholder="First Name" oninput="autoSubmitForm()">
+
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" value="{{ request.GET.lastName }}" placeholder="Last Name"
+        oninput="autoSubmitForm()">
+
+      <label for="profusername">Username:</label>
+      <input type="text" id="profusername" name="profusername" value="{{ request.GET.profusername }}"
+        placeholder="Username" oninput="autoSubmitForm()">
+
+      <label for="contact">Contact:</label>
+      <input type="text" id="contact" name="contact" value="{{ request.GET.contact }}" placeholder="Contact"
+        oninput="autoSubmitForm()">
+    </form>
+    <h2>Filtered Professors</h2>
+    <ul>
+      {% for professor in professors %}
+      <li>
+        <strong>ID:</strong> {{ professor.profid }}<br>
+        <strong>Name:</strong> {{ professor.firstName }} {{ professor.lastName }}<br>
+        <strong>Username:</strong> {{ professor.profusername }}<br>
+        <strong>Contact:</strong> {{ professor.contact }}
+      </li>
+      {% empty %}
+      <li>No professors found.</li>
+      {% endfor %}
+    </ul>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Professor Id</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Username</th>
+          <th scope="col">Mobile</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for d in data1 %}
+        <tr>
+          <th scope="row">{{d.prof_id}}</th>
+          <td>{{d.First_name}}</td>
+          <td>{{d.Last_name}}</td>
+          <td>{{d.Prof_username}}</td>
+          <td>{{d.Contact_number}}</td>
+
+        </tr>
+        {% endfor %}
+
+
+      </tbody>
+    </table>
+  </div>
+
+{% endblock main %}

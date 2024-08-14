@@ -1,0 +1,772 @@
+{% extends "index.html" %}
+{% block title %}
+Student Home
+{% endblock title %}
+{% block login %}<a class="btn-getstarted" href="adminlogout">Logout</a>{% endblock login %}
+{% block styles %}
+<style>
+  .table-content {
+    display: none;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+  }
+
+  .containerr {
+    max-width: 100%;
+    margin: 10px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    font-weight: bold;
+    color: black;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0056b3;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .sidebar {
+    height: 100vh;
+  }
+
+  button:hover {
+    background-color: #004494;
+  }
+
+  .king {
+    height: 100vh;
+  }
+
+  .error {
+    color: red;
+    display: none;
+  }
+
+  .nav-link {
+    cursor: pointer;
+  }
+</style>
+
+{% endblock styles %}
+{% block main %}
+<div class="btn-getstarted d-flex justify-content-start">
+  <i class="bi bi-person-fill"></i>
+  {% if user.is_authenticated %}
+  <p class="pt-2">Welcome, {{user.get_username}}!</p>
+  {% else %}
+  <p>Welcome, new user. Please log in.</p>
+  {% endif %}
+</div>
+<div class="container-fluid king">
+  <div class="row h-100">
+    <nav class="col-3 col-md-2 h-100 d-none d-md-block bg-light sidebar king">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" onclick="toggleTable('table4')">Student Registration</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="toggleTable('table5')">Professor Registration</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="toggleTable('table6')">Couses</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="toggleTable('table1')">View Professor Details</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="toggleTable('table2')">View Student Details</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="toggleTable('table3')">View Course Details</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <main role="main" class="col-9 ml-sm-auto col-lg-10 px-4">
+      <div id="right" class="table-responsive">
+        <!-- Table to Display Filtered Data -->
+        <div id="table1" class="table-content">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Professor Id</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Mobile</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for d in data1 %}
+              <tr>
+                <th scope="row">{{d.prof_id}}</th>
+                <td>{{d.First_name}}</td>
+                <td>{{d.Last_name}}</td>
+                <td>{{d.Prof_username}}</td>
+                <td>{{d.Contact_number}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div id="table2" class="table-content">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Hall Ticket</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Email</th>
+                <th scope="col">Username</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for d in data2 %}
+              <tr>
+                <th scope="row">{{d.id}}</th>
+                <td>{{d.Hall_ticket_number}}</td>
+                <td>{{d.First_name}}</td>
+                <td>{{d.Last_name}}</td>
+                <td>{{d.Mobile}}</td>
+                <td>{{d.Email}}</td>
+                <td>{{d.Username}}</td>
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+        <div id="table3" class="table-content">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Course Name</th>
+                <th scope="col">Semester</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for d in data3 %}
+              <tr>
+                <th scope="row">{{d.id}}</th>
+                <td>{{d.Course_name}}</td>
+                <td>{{d.Semester}}</td>
+                <td>{{d.Start_date}}</td>
+                <td>{{d.End_date}}</td>
+              </tr>
+              {% endfor %}
+
+
+            </tbody>
+          </table>
+        </div>
+        <div id="table4" class="table-content">
+          <div class="containerr">
+            <h1>Student Registration Form</h1>
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="first-name">First Name *</label>
+                  <input type="text" class="form-control" id="first-name" name="first-name" required
+                    placeholder="Enter your first name" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="last-name">Last Name *</label>
+                  <input type="text" class="form-control" id="last-name" name="last-name" required
+                    placeholder="Enter your last name" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="gender">Gender *</label><br>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="male" name="gender" value="male" required />
+                    <label class="form-check-label" for="male">Male</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="female" name="gender" value="female" required />
+                    <label class="form-check-label" for="female">Female</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="other" name="gender" value="other" required />
+                    <label class="form-check-label" for="other">Other</label>
+                  </div>
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="dob">Date of Birth *</label>
+                  <input type="date" class="form-control" id="dob" name="dob" max="<?php echo date('Y-m-d'); ?>"
+                    required />
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="email">Email *</label>
+                  <input type="email" class="form-control" id="email" name="email" required
+                    placeholder="Enter your email" />
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="mobile">Mobile *</label>
+                  <input type="text" class="form-control" id="mobile" name="mobile" maxlength="10"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" required
+                    placeholder="Enter your mobile number">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="father-name">Father Name *</label>
+                  <input type="text" class="form-control" id="father-name" name="father-name" required
+                    placeholder="Enter your father's name" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="occupation">Occupation</label>
+                  <input type="text" class="form-control" id="occupation" name="occupation"
+                    placeholder="Enter your father's occupation" maxlength="50" />
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="highest-graduation">Highest Graduation *</label>
+                  <input type="text" class="form-control" id="highest-graduation" name="highest-graduation" required
+                    placeholder="Enter your highest-graduation" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="year-of-passout">Year of Passout *</label>
+                  <input type="text" class="form-control" id="year-of-passout" name="year-of-passout" maxlength="4"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);" required
+                    placeholder="Enter your year of passout">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="specialization">Specialization *</label>
+                  <select id="specialization" class="form-control" name="specialization" required>
+                    <option value="">Select specialization</option>
+                    <option value="CS">Computer Science</option>
+                    <option value="IT">Information Technology</option>
+                    <option value="ECE">Electronics and Communication Engineering</option>
+                    <option value="ME">Mechanical Engineering</option>
+                    <!-- Add more options as needed -->
+                  </select>
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="percentage">Percentage *</label>
+                  <input type="text" class="form-control" id="percentage" name="percentage" maxlength="5" required
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'); if (this.value > 100) this.value = 100;"
+                    placeholder="Enter your percentage">
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="college-name">College Name *</label>
+                <input type="text" class="form-control" id="college-name" name="college-name" required
+                  placeholder="Enter your college name" maxlength="50"
+                  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="college-web">College Website</label>
+                  <input type="text" class="form-control" id="college-web" name="college-web" required
+                    placeholder="Enter your college website" />
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="college-code">College Code *</label>
+                  <input type="text" class="form-control" id="college-code" name="college-code" required
+                    placeholder="Enter your college code" maxlength="6"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="ielts-gre-score">IELTS/GRE Score *</label>
+                  <input type="text" class="form-control" id="ielts-gre-score" name="ielts-gre-score" maxlength="3"
+                    required
+                    oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'); if (this.value > 10) this.value = 10;"
+                    placeholder="Enter your IELTS/GRE score">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="current-course">Current Course *</label>
+                  <select required id="current-course" class="form-control" name="current-course">
+                    <option value="">Select specialization</option>
+                    <option value="CYS">Cyber Security</option>
+                    <option value="DS">Data Science</option>
+                    <option value="CS">Computer Science</option>
+                    <!-- Add more options as needed -->
+                  </select>
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="enroll-date">Enroll Date *</label>
+                  <input type="date" class="form-control" id="enroll-date" name="enroll-date" required />
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="course-duration">Course Duration *</label>
+                  <input type="text" class="form-control" id="course-duration" name="course-duration" required
+                    placeholder="Enter your course duration" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="hall-ticket-number">Hall Ticket Number *</label>
+                <input type="text" class="form-control" id="hall-ticket-number" name="hall-ticket-number" required
+                  placeholder="Enter your hall ticket number" maxlength="10" />
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="username">Username *</label>
+                  <input type="text" class="form-control" id="username" name="username" required
+                    placeholder="Enter your username" />
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="password">Password *</label>
+                  <input type="password" class="form-control" id="password" name="password" required
+                    placeholder="Enter your password" minlength="8" maxlength="12"
+                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}" />
+                  <span class="error" id="passwordError">Password must be 8-12 characters, At least one
+                    uppercase, one lowercase, one number, and one special character.</span>
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="address">Permanent Address </label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address" />
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="city">City *</label>
+                  <input type="text" class="form-control" id="city" name="city" required placeholder="Enter your city"
+                    maxlength="50" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="state">State *</label>
+                  <input type="text" class="form-control" id="state" name="state" required
+                    placeholder="Enter your state" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="pincode">Pin Code *</label>
+                  <input type="text" class="form-control" id="pincode" name="pincode" maxlength="6"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);" required
+                    placeholder="Enter your pin code">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="country">Country *</label>
+                  <input type="text" class="form-control" id="country" name="country" required
+                    placeholder="Enter your country" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="guardian-name">Guardian Name *</label>
+                  <input type="text" class="form-control" id="guardian-name" name="guardian-name" required
+                    placeholder="Enter your guardian's name" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="guardian-relation">Guardian Relation *</label>
+                  <input type="text" class="form-control" id="guardian-relation" name="guardian-relation" required
+                    placeholder="Enter your relation with guardian" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="guardian-contact">Guardian Contact Number *</label>
+                  <input type="text" class="form-control" id="guardian-contact" name="guardian-contact" maxlength="10"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" required
+                    placeholder="Enter your guardian's contact number">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="guardian-mail">Guardian Email</label>
+                  <input type="email" class="form-control" id="guardian-mail" name="guardian-mail"
+                    placeholder="Enter your guardian's email" />
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="present-address">Present Address *</label>
+                <input type="text" class="form-control" id="present-address" name="present-address" required
+                  placeholder="Enter your present address" />
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group p-2">
+                  <button type="submit" class="btn btn-primary float-left">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="table5" class="table-content">
+          <div class="containerr">
+            <h1>Professor Registration Form</h1>
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="firstName">First Name *</label>
+                  <input type="text" class="form-control" id="firstName" name="firstName" required
+                    placeholder="Enter your first name" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="lastName">Last Name *</label>
+                  <input type="text" class="form-control" id="lastName" name="lastName" required
+                    placeholder="Enter your last name" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="contact">Contact Number *</label>
+                  <input type="text" class="form-control" id="contact" name="contact" maxlength="10"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" required
+                    placeholder="Enter your contact number">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="email">Email Address *</label>
+                  <input type="email" class="form-control" id="email" name="email"
+                    placeholder="Enter your email address" required />
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="profid">Prof id *</label>
+                <input type="text" class="form-control" id="profid" name="profid" placeholder="Enter prof id"
+                  required />
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="profusername">Prof Username *</label>
+                  <input type="text" class="form-control" id="profusername" name="profusername" required
+                    placeholder="Enter your username" />
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="profpassword">Prof Password *</label>
+                  <input type="password" class="form-control" id="profpassword" name="profpassword" required
+                    placeholder="Enter your professional password" minlength="8" maxlength="12"
+                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}" />
+                  <span class="error" id="profPasswordError">Password must be 8-12 characters, At least one
+                    uppercase, one lowercase, one number, and one special character.</span>
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="address">Permanent Address *</label>
+                <input type="text" class="form-control" id="address" name="address" required
+                  placeholder="Enter your address" />
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="highestDegree">Highest Degree Obtained *</label>
+                  <input type="text" class="form-control" id="highestDegree" name="highestDegree" required
+                    placeholder="Enter your highest degree obtained" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="yearOfGraduation">Year of Graduation *</label>
+                  <input type="text" class="form-control" id="yearOfGraduation" name="yearOfGraduation" maxlength="4"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);" required
+                    placeholder="Enter the year of graduation">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="qualification">Specialization *</label>
+                  <input type="text" class="form-control" id="qualification" name="qualification" required
+                    placeholder="Enter your specialization" maxlength="30"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="experience">Experience *</label>
+                  <input type="text" class="form-control" id="experience" name="experience" required
+                    placeholder="Enter your experience" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="previousPosition">Previous Position *</label>
+                  <input type="text" class="form-control" id="previousPosition" name="previousPosition" required
+                    placeholder="Enter your previous position" maxlength="30"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="previousOrganization">Previous Organization *</label>
+                  <input type="text" class="form-control" id="previousOrganization" name="previousOrganization" required
+                    placeholder="Enter your previous organization" maxlength="30"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-6 p-2">
+                  <label for="currentPosition">Current Position *</label>
+                  <input type="text" class="form-control" id="currentPosition" name="currentPosition" required
+                    placeholder="Enter your current position" maxlength="30"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, ''); ">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                  <label for="teachingSubjects">Teaching Subjects *</label>
+                  <input type="text" class="form-control" id="teachingSubjects" name="teachingSubjects" required
+                    placeholder="Enter your subjects you teach" maxlength="50"
+                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, ''); ">
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group p-2">
+                  <button type="submit" class="btn btn-primary float-left">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="table6" class="table-content">
+          <div class="containerr">
+            <h1>Course Creation Form</h1>
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group p-2">
+                <label for="courseName">Course Name:</label>
+                <select id="courseName" name="courseName" class="form-control" required>
+                  <option value="" disabled selected>Select Course Name</option>
+                  <option value="Data Science1">Data Science1</option>
+                  <option value="Data Science2">Data Science2</option>
+                  <option value="Computer science1">Computer Science1</option>
+                  <option value="Computer science2">Computer Science2</option>
+                  <option value="Cyber security1">Cyber Security1</option>
+                  <option value="Cyber security2">Cyber Security2</option>
+                </select>
+              </div>
+              <div class="form-group p-2">
+                <label for="semester">Semester:</label>
+                <select id="semester" name="semester" class="form-control" required>
+                  <option value="" disabled selected>Select Semester</option>
+                  <option value="semester1">Semester 1</option>
+                  <option value="semester2">Semester 2</option>
+                  <option value="semester3">Semester 3</option>
+                  <option value="semester4">Semester 4</option>
+                </select>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-4 p-2">
+                  <label for="subject1">Subject 1:</label>
+                  <input type="text" id="subject1" name="subject1" class="form-control" placeholder="Enter Subject 1"
+                    required />
+                </div>
+                <div class="form-group col-md-4 p-2">
+                  <label for="subjectCode1">Subject Code 1:</label>
+                  <input type="text" id="subjectCode1" name="subjectCode1" class="form-control"
+                    placeholder="Enter Subject Code 1" required />
+                </div>
+                <div class="form-group col-md-4 p-2">
+                  <label for="credits1">Credits:</label>
+                  <input type="number" id="credits1" name="credits1" class="form-control"
+                    placeholder="Enter Credits for Subject 1" min="1" max="30" required />
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-4 p-2">
+                  <label for="subject2">Subject 2:</label>
+                  <input type="text" id="subject2" name="subject2" class="form-control" placeholder="Enter Subject 2"
+                    required />
+                </div>
+                <div class="form-group col-md-4 p-2">
+                  <label for="subjectCode2">Subject Code 2:</label>
+                  <input type="text" id="subjectCode2" name="subjectCode2" class="form-control"
+                    placeholder="Enter Subject Code 2" required />
+                </div>
+                <div class="form-group col-md-4 p-2">
+                  <label for="credits2">Credits:</label>
+                  <input type="number" id="credits2" name="credits2" class="form-control"
+                    placeholder="Enter Credits for Subject 2" min="1" max="30" required />
+                </div>
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group col-md-4 p-2">
+                  <label for="subject3">Subject 3:</label>
+                  <input type="text" id="subject3" name="subject3" class="form-control" placeholder="Enter Subject 3"
+                    required />
+                </div>
+                <div class="form-group col-md-4 p-2">
+                  <label for="subjectCode3">Subject Code 3:</label>
+                  <input type="text" id="subjectCode3" name="subjectCode3" class="form-control"
+                    placeholder="Enter Subject Code 3" required />
+                </div>
+                <div class="form-group col-md-4 p-2">
+                  <label for="credits3">Credits:</label>
+                  <input type="number" id="credits3" name="credits3" class="form-control"
+                    placeholder="Enter Credits for Subject 3" min="1" max="30" required />
+                </div>
+              </div>
+              <div class="form-group p-2">
+                <label for="subject4">Subject 4 (Sports):</label>
+                <input type="text" id="subject4" name="subject4" class="form-control" placeholder="Enter Subject 4" />
+              </div>
+              <div class="form-group p-2">
+                <label for="subject5">Subject 5 (Music):</label>
+                <input type="text" id="subject5" name="subject5" class="form-control" placeholder="Enter Subject 5" />
+              </div>
+              <div class="form-group p-2">
+                <label for="subject6">Subject 6 (Lab):</label>
+                <input type="text" id="subject6" name="subject6" class="form-control" placeholder="Enter Subject 6" />
+              </div>
+              <div class="form-group p-2">
+                <label for="courseDescription">Course Description:</label>
+                <textarea id="courseDescription" name="courseDescription" class="form-control" rows="4"
+                  placeholder="Enter Course Description" required></textarea>
+              </div>
+              <div class="form-group p-2">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" required />
+              </div>
+              <div class="form-group p-2">
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" class="form-control" required />
+              </div>
+              <div class="form-row d-flex">
+                <div class="form-group p-2">
+                  <button type="submit" class="btn btn-primary float-left">Submit</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </main>
+  </div>
+</div>
+{% endblock main %}
+{% block script %}
+<script>
+  function toggleTable(tableId) {
+    var table = document.getElementById(tableId);
+    var right = document.getElementById('right');
+
+    if (table.style.display === 'none' || table.style.display === '') {
+      var tables = document.getElementsByClassName('table-content');
+      for (var i = 0; i < tables.length; i++) {
+        tables[i].style.display = 'none';
+      }
+      right.style.display = 'block';
+      table.style.display = 'block';
+    } else {
+      table.style.display = 'none';
+      right.style.display = 'none';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const courseSelect = document.getElementById('courseName');
+    const subjects = {
+      "Data Science1": [
+        { name: "Data Visualization", code: "DV101", credits: 3 },
+        { name: "Data Mining", code: "DM102", credits: 3 },
+        { name: "Machine Learning", code: "ML103", credits: 4 }
+      ],
+      "Data Science2": [
+        { name: "Deep Learning", code: "DL104", credits: 4 },
+        { name: "Programming Languages", code: "PL105", credits: 2 },
+        { name: "Statistics", code: "ST106", credits: 3 }
+      ],
+      "Computer science1": [
+        { name: "Software Engineering", code: "SE201", credits: 3 },
+        { name: "Artificial Intelligence", code: "AI202", credits: 4 },
+        { name: "Data Structure", code: "DS203", credits: 3 }
+      ],
+      "Computer science2": [
+        { name: "Operating Systems", code: "OS204", credits: 3 },
+        { name: "Information Science", code: "IS205", credits: 2 },
+        { name: "Object-oriented Programs", code: "OOP206", credits: 3 }
+      ],
+      "Cyber security1": [
+        { name: "Responsible Technology", code: "RT301", credits: 3 },
+        { name: "Penetration Testing", code: "PT302", credits: 4 },
+        { name: "Cyber Operations", code: "CO303", credits: 3 }
+      ],
+      "Cyber security2": [
+        { name: "Distributed System Security", code: "DSS304", credits: 4 },
+        { name: "Digital Forensics", code: "DF305", credits: 2 },
+        { name: "Information Security", code: "IS306", credits: 3 }
+      ]
+    };
+
+    courseSelect.addEventListener('change', function () {
+      const selectedCourse = courseSelect.value;
+      const selectedSubjects = subjects[selectedCourse] || [];
+
+      for (let i = 1; i <= 6; i++) {
+        const subject = selectedSubjects[i - 1] || {};
+        document.getElementById(`subject${i}`).value = subject.name || '';
+        document.getElementById(`subjectCode${i}`).value = subject.code || '';
+        document.getElementById(`credits${i}`).value = subject.credits || '';
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dob').setAttribute('max', today);
+  });
+
+  document.getElementById('password').addEventListener('input', function () {
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('passwordError');
+    if (passwordInput.value === "") {
+      errorMessage.style.display = 'none';
+    } else if (!passwordInput.checkValidity()) {
+      errorMessage.style.display = 'block';
+    } else {
+      errorMessage.style.display = 'none';
+    }
+  });
+
+  document.getElementById('profpassword').addEventListener('input', function () {
+    const profPasswordInput = document.getElementById('profpassword');
+    const profErrorMessage = document.getElementById('profPasswordError');
+    if (profPasswordInput.value === "") {
+      profErrorMessage.style.display = 'none';
+    } else if (!profPasswordInput.checkValidity()) {
+      profErrorMessage.style.display = 'block';
+    } else {
+      profErrorMessage.style.display = 'none';
+    }
+  });
+
+  function autoSubmitForm() {
+    document.getElementById('filterForm').submit();
+  }
+</script>
+
+
+{% endblock script %}

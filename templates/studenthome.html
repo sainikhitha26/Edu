@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block title %}
+Student Home
+{% endblock title %}
+{% block login %}<a class="btn-getstarted" href="adminlogout">Logout</a>{% endblock login %}
+{% block styles %}
+{% endblock styles %}
+{% block main %}
+<table class="table table-striped">  
+<h1>Welcome, {{ student.First_name }} {{ student.Last_name }}</h1>  
+  <tbody>
+    <tr>
+      <td>Student Id :{{student.id}}</td>
+      <td>Student Name :{{student.First_name}} {{student.Last_name}}</td>
+      <td>Student Course :{{student.Current_course}}</td>
+      <td>Prof Username :{{student.Username}}</td>
+      <td>Prof Number :{{student.Mobile}}</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock main %}
+{% block script %}
+{% endblock script %}
